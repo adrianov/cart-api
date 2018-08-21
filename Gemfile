@@ -24,6 +24,7 @@ gem 'uglifier'
 
 # Tools
 gem 'awesome_print'
+gem 'grape'
 gem 'pry-rails'
 
 # Env specific dependencies...
