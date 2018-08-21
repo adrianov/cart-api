@@ -1,0 +1,19 @@
+# Product list
+class Product
+  def self.all
+    [
+      {
+        "id": '1',
+        "name": 'Product #1',
+        "description": 'Product Description',
+        "price": '50'
+      },
+      {
+        "id": '2',
+        "name": 'Product #2',
+        "description": 'Product Description',
+        "price": '150'
+      }
+    ]
+  end
+end
