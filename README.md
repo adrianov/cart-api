@@ -1,6 +1,6 @@
 # Cart Api
 
-...
+Demo Cart API
 
 Generated with [Raygun](https://github.com/carbonfive/raygun).
 
@@ -12,119 +12,129 @@ Generated with [Raygun](https://github.com/carbonfive/raygun).
 
 To run the specs or fire up the server, be sure you have these installed (and running):
 
-* Ruby 2.5 (see [.ruby-version](.ruby-version)).
-* PostgreSQL 10.3+ (`brew install postgresql`).
-* Chromedriver 2.3+ for Capybara testing (`brew install chromedriver`).
-* Heroku CLI (`brew install heroku`).
+* Ruby 2.4 (see [.ruby-version](.ruby-version)).
 
 ### First Time Setup
 
 #### `bin/setup`
 
-After cloning, run [./bin/setup](bin/setup) to install missing gems and prepare the database.
+### Usage
+```
+$ http GET localhost:3000/api/products
+HTTP/1.1 200 OK
+Cache-Control: max-age=0, private, must-revalidate
+Content-Length: 163
+Content-Type: application/json
+ETag: W/"a0390d45a8e1e5510a8e68cf73c08b59"
+X-Request-Id: 3f21c2d5-4f1f-42e4-a963-4e3c686a17a2
+X-Runtime: 0.002264
 
-Note, `rake db:sample_data` (run as part of setup) loads a small set of data for development. Check out
-[db/sample_data.rb](db/sample_data.rb) for details.
+{
+    "data": [
+        {
+            "description": "Product Description",
+            "id": 1,
+            "name": "Product #1",
+            "price": 50
+        },
+        {
+            "description": "Product Description",
+            "id": 2,
+            "name": "Product #2",
+            "price": 150
+        }
+    ]
+}
 
-#### `.env`
+$ http POST localhost:3000/api/cart product_id=1 quantity=2
+HTTP/1.1 201 Created
+Cache-Control: no-cache
+Content-Length: 0
+Content-Type: text/plain
+X-Request-Id: 883fcc13-9592-4a6f-a84f-b6ed392420ca
+X-Runtime: 0.002660
 
-The `bin/setup` script will create a `.env` file that defines settings for your local environment. Do not check this into source control. Refer to the [environment variables](#environment-variables) section below for what can be specified in `.env`.
 
-### Running the Specs
 
-To run all Ruby and Javascript specs.
+$ http DELETE localhost:3000/api/cart product_id=1
+HTTP/1.1 404 Not Found
+Cache-Control: no-cache
+Content-Length: 99
+Content-Type: application/json
+X-Request-Id: c24a2bdd-1691-43f7-9d2f-e8b72fa31c4d
+X-Runtime: 0.005988
 
-    $ ./bin/rake
+{
+    "error": {
+        "message": "Unable to resolve the request \"/api/cart\".",
+        "type": "invalid_request_error"
+    }
+}
 
-Note: `./bin/rake` runs the springified version of rake (there's a `./bin/rspec` and `./bin/rails` too). You can add
-`./bin` to your PATH too, then you'll always use the springified bins when they exist. See
-[rails/spring](https://github.com/rails/spring) for additional information.
+$ http DELETE localhost:3000/api/cart/1
+HTTP/1.1 204 No Content
+Cache-Control: no-cache
+Content-Type: text/plain
+X-Request-Id: c16ffb18-f289-433e-9713-d696cc09bb4f
+X-Runtime: 0.001111
 
-### Running the Application Locally
 
-The easiest way to run the app is using `heroku local`. This starts all the processes defined in `Procfile`, including the Rails server.
 
-    $ heroku local
-    $ open http://localhost:3000
+$ http GET localhost:3000/api/cart
+HTTP/1.1 200 OK
+Cache-Control: max-age=0, private, must-revalidate
+Content-Length: 79
+Content-Type: application/json
+ETag: W/"b4091c4bf9428639187683ebc6f39e62"
+X-Request-Id: d048d309-ba6e-4d2f-8a09-6a005a4533ff
+X-Runtime: 0.001272
 
-## Conventions
+{
+    "products": [
+        {
+            "id": 1,
+            "quantity": 1,
+            "sum": 50
+        }
+    ],
+    "products_count": 1,
+    "total_sum": 50
+}
 
-### Git
+$ http POST localhost:3000/api/cart product_id=2 quantity=2
+HTTP/1.1 201 Created
+Cache-Control: no-cache
+Content-Length: 0
+Content-Type: text/plain
+X-Request-Id: 602402d4-3cea-4acc-ba7f-73ef23679b67
+X-Runtime: 0.001379
 
-* Branch `development` is auto-deployed to acceptance.
-* Branch `master` is auto-deployed to production.
-* Create feature branches off of `development` using the naming convention
-  `(features|chores|bugs)/a-brief-description-######`, where ###### is the tracker id.
-* Rebase your feature branch before merging into `development` to produce clean/compact merge bubbles.
-* Always retain merge commits when merging into `development` (e.g. `git merge --no-ff branchname`).
-* Use `git merge development` (fast-forward, no merge commit) from `master`.
-* Craft atomic commits that make sense on their own and can be easily cherry-picked or reverted if necessary.
 
-### Code Style
 
-Rubocop is configured to enforce the style guide for this project.
+$ http GET localhost:3000/api/cart
+HTTP/1.1 200 OK
+Cache-Control: max-age=0, private, must-revalidate
+Content-Length: 112
+Content-Type: application/json
+ETag: W/"a74578d45ca353b37814e3d37e70f91c"
+X-Request-Id: 28be701f-44d2-4dd6-8a66-57018d1a6a3f
+X-Runtime: 0.001199
 
-## Additional/Optional Development Details
+{
+    "products": [
+        {
+            "id": 1,
+            "quantity": 1,
+            "sum": 50
+        },
+        {
+            "id": 2,
+            "quantity": 2,
+            "sum": 300
+        }
+    ],
+    "products_count": 3,
+    "total_sum": 350
+}
 
-### Code Coverage (local)
-
-Coverage for the ruby specs:
-
-    $ COVERAGE=true rspec
-
-Code coverage is reported to Code Climate on every CI build so there's a record of trending.
-
-### Using Guard
-
-Guard is configured to run ruby specs, and also listen for livereload connections.
-
-    $ bundle exec guard
-
-### Using Mailcatcher
-
-    $ gem install mailcatcher
-    $ mailcatcher
-    $ open http://localhost:1080/
-
-Learn more at [mailcatcher.me](http://mailcatcher.me/). And please don't add mailcatcher to the Gemfile.
-
-### Continuous Integration/Deployment with CircleCI and Heroku
-
-This project is configured for continuous integration with CircleCI, see [.circleci/config.yml](.circleci/config.yml) for details.
-
-On successful builds, Heroku will trigger a deployment via its
-[GitHub Integration](https://devcenter.heroku.com/articles/github-integration#automatic-deploys).
-
-# Server Environments
-
-### Hosting
-
-Acceptance and Production are hosted on Heroku under the _email@example.com_ account.
-
-### Environment Variables
-
-Several common features and operational parameters can be set using environment variables.
-
-**Required**
-
-* `SECRET_KEY_BASE` - Secret key base for verifying signed cookies. Should be 30+ random characters and secret!
-
-**Optional**
-
-* `HOSTNAME` - Canonical hostname for this application. Other incoming requests will be redirected to this hostname.
-* `FORCE_SSL` - Require all requests to come over a secure connection (default: false).
-* `BASIC_AUTH_PASSWORD` - Enable basic auth with this password.
-* `BASIC_AUTH_USER` - Set a basic auth username (not required, password enables basic auth).
-* `RACK_TIMEOUT_SERVICE_TIMEOUT` - Terminate requests that take longer than this time (default: 15s). 
-* `ASSET_HOST` - Asset host for static assets (e.g. CDN) (default: none).
-* `PORT` - Port to listen on (default: 3000).
-* `WEB_CONCURRENCY` - Number of puma workers to spawn (default: 1).
-* `RAILS_MAX_THREADS` - Threads per worker (default: 5).
-* `DB_POOL` - Number of DB connections per pool (i.e. per worker) (default: RAILS_MAX_THREADS or 5).
-* `RAILS_LOG_TO_STDOUT` - Log to standard out, good for Heroku (default: false).
-* `RAILS_SERVE_STATIC_FILES` - Serve static assets, good for Heroku (default: false).
-
-### Third Party Services
-
-* Heroku for hosting.
-* CircleCI for continuous integration.
+```
