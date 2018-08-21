@@ -1,7 +1,35 @@
 # Application API
 class Api < Grape::API
   format :json
-  # rescue_from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound
+  FULL_ERRORS = {
+    required: 'cannot be blank',
+    blank: 'cannot be blank',
+    invalid: 'is invalid'
+  }.freeze
+
+  rescue_from Grape::Exceptions::ValidationErrors do |e|
+    messages = e.errors.map do |attributes, errors|
+      code = errors.join
+      full_error = FULL_ERRORS.key?(code.to_sym) ? FULL_ERRORS[code.to_sym] : code
+
+      {
+        name: attributes.join,
+        code: code,
+        message: "#{attributes.join.titleize} #{full_error}."
+      }
+    end
+
+    error!(
+      {
+        error: {
+          params: messages,
+          type: 'invalid_param_error',
+          message: 'Invalid data parameters'
+        }
+      },
+      400
+    )
+  end
 
   helpers do
     # Create persistent cart
@@ -32,15 +60,21 @@ class Api < Grape::API
 
     # Add Product to Cart
     params do
-      requires :product_id, type: Integer
-      optional :quantity, type: Integer, default: 1
+      requires :product_id,
+               type: { value: Integer, message: 'invalid' },
+               message: 'required',
+               allow_blank: { value: false, message: 'blank' }
+      optional :quantity,
+               type: { value: Integer, message: 'invalid' },
+               default: 1,
+               allow_blank: { value: false, message: 'blank' }
     end
     post do
       cart.add_product!(product, params[:quantity])
     end
 
     # Remove Product from Cart
-    route_param :product_id, type: Integer do
+    route_param :product_id, type: { value: Integer, message: 'invalid' } do
       delete do
         cart.remove_product!(product)
       end
