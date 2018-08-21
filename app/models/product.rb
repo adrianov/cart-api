@@ -6,7 +6,7 @@ class Product
     self.id = params[:id].to_i
     self.name = params[:name].to_s
     self.description = params[:description].to_s
-    self.price = params[:price].to_d
+    self.price = params[:price].to_i
   end
 
   def self.all
