@@ -56,21 +56,6 @@ X-Runtime: 0.002660
 
 
 
-$ http DELETE localhost:3000/api/cart product_id=1
-HTTP/1.1 404 Not Found
-Cache-Control: no-cache
-Content-Length: 99
-Content-Type: application/json
-X-Request-Id: c24a2bdd-1691-43f7-9d2f-e8b72fa31c4d
-X-Runtime: 0.005988
-
-{
-    "error": {
-        "message": "Unable to resolve the request \"/api/cart\".",
-        "type": "invalid_request_error"
-    }
-}
-
 $ http DELETE localhost:3000/api/cart/1
 HTTP/1.1 204 No Content
 Cache-Control: no-cache
