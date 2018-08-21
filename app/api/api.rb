@@ -25,6 +25,11 @@ class Api < Grape::API
       end
     end
 
+    # Return Cart
+    get do
+      cart
+    end
+
     # Add Product to Cart
     params do
       requires :product_id, type: Integer
