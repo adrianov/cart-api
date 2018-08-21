@@ -16,6 +16,12 @@ describe Cart, type: :model do
       cart.remove_product!(Product.find(1), 1)
       expect(cart.products[1].quantity).to eq(0)
     end
+    it 'removes 1 product by default' do
+      cart = Cart.new
+      cart.add_product!(Product.find(1), 2)
+      cart.remove_product!(Product.find(1))
+      expect(cart.products[1].quantity).to eq(1)
+    end
   end
 
   describe '.total_sum' do

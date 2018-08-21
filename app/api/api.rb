@@ -19,15 +19,26 @@ class Api < Grape::API
 
   # Initialize persistent Cart
   resource :cart do
+    helpers do
+      def product
+        @product ||= Product.find(params[:product_id])
+      end
+    end
+
+    # Add Product to Cart
     params do
       requires :product_id, type: Integer
       optional :quantity, type: Integer, default: 1
     end
-
-    # Add Product to Cart
     post do
-      product = Product.find(params[:product_id])
       cart.add_product!(product, params[:quantity])
+    end
+
+    # Remove Product from Cart
+    route_param :product_id, type: Integer do
+      delete do
+        cart.remove_product!(product)
+      end
     end
   end
 end

@@ -10,10 +10,12 @@ class Cart
   def add_product!(product, quantity)
     products[product.id] ||= CartItem.new(product: product, quantity: 0)
     products[product.id].quantity += quantity
+    true
   end
 
-  def remove_product!(product, quantity)
+  def remove_product!(product, quantity = 1)
     products[product.id].quantity -= quantity
+    true
   end
 
   def total_sum
