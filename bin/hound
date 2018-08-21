@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Installation:
+# gem install rubocop
+# sudo npm install -g coffeelint
+# sudo npm install -g jshint
+# sudo npm install -g csscomb
+# gem install scss_lint
+
+git diff --name-only --diff-filter=ACMR master | grep '\.rb$' | xargs -r rubocop -a --force-exclusion
+git diff --name-only --diff-filter=ACMR master | grep '\.rake$' | xargs -r rubocop -a --force-exclusion
+git diff --name-only --diff-filter=ACMR master | grep '\.coffee$' | xargs -r coffeelint -f coffeelint.json
+git diff --name-only --diff-filter=ACMR master | grep '\.js$' | xargs -r jshint -c javascript.json
+git diff --name-only --diff-filter=ACMR master | grep '\.scss$' | xargs -r csscomb -c .csscomb.json
+git diff --name-only --diff-filter=ACMR master | grep '\.scss$' | xargs -r scss-lint -c .scss-lint.yml
