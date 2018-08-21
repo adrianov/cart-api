@@ -27,6 +27,10 @@ class Product
   end
 
   def self.find(id)
-    all.detect { |product| product.id == id }
+    all.detect { |product| product.id == id } ||
+      raise(GrapeParamError.new(
+              name: 'product',
+              code: 'not_found'
+            ))
   end
 end

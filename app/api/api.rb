@@ -4,31 +4,25 @@ class Api < Grape::API
   content_type :txt, 'text/plain'
 
   format :json
-  FULL_ERRORS = {
-    required: 'cannot be blank',
-    blank: 'cannot be blank',
-    invalid: 'is invalid'
-  }.freeze
 
   rescue_from Grape::Exceptions::ValidationErrors do |e|
-    messages = e.errors.map do |attributes, errors|
-      code = errors.join
-      full_error = FULL_ERRORS.key?(code.to_sym) ? FULL_ERRORS[code.to_sym] : code
-
-      {
-        name: attributes.join,
-        code: code,
-        message: "#{attributes.join.titleize} #{full_error}."
-      }
+    e.errors.each do |attributes, errors|
+      break error!(
+        {
+          error: GrapeParamError.new(
+            name: attributes.join,
+            code: errors.join
+          ).error
+        },
+        400
+      )
     end
+  end
 
+  rescue_from GrapeParamError do |e|
     error!(
       {
-        error: {
-          params: messages,
-          type: 'invalid_param_error',
-          message: 'Invalid data parameters'
-        }
+        error: e.error
       },
       400
     )

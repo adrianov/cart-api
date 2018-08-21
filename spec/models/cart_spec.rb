@@ -14,7 +14,7 @@ describe Cart, type: :model do
       cart = Cart.new
       cart.add_product!(Product.find(1), 1)
       cart.remove_product!(Product.find(1), 1)
-      expect(cart.products[1].quantity).to eq(0)
+      expect(cart.products.key?(1)).to be_falsey
     end
     it 'removes 1 product by default' do
       cart = Cart.new

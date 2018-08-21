@@ -8,12 +8,25 @@ class Cart
   end
 
   def add_product!(product, quantity)
-    products[product.id] ||= CartItem.new(product: product, quantity: 0)
-    products[product.id].quantity += quantity
+    if products.key? product.id
+      products[product.id].quantity += quantity
+    else
+      products[product.id] = CartItem.new(product: product, quantity: quantity)
+    end
   end
 
   def remove_product!(product, quantity = 1)
-    products[product.id].quantity -= quantity
+    unless products.key? product.id
+      raise GrapeParamError.new(
+        name: 'product',
+        code: 'not_in_cart'
+      )
+    end
+    if products[product.id].quantity == quantity
+      products.delete(product.id)
+    else
+      products[product.id].quantity -= quantity
+    end
   end
 
   def total_sum
