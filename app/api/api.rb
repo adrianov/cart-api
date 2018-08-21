@@ -84,10 +84,13 @@ class Api < Grape::API
 
   route :any, '*path' do
     error!(
-      error: {
-        type: 'invalid_request_error',
-        message: "Unable to resolve the request \"#{request.path}\"."
-      }
+      {
+        error: {
+          type: 'invalid_request_error',
+          message: "Unable to resolve the request \"#{request.path}\"."
+        }
+      },
+      404
     )
   end
 end
