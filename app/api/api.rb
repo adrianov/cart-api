@@ -1,5 +1,8 @@
 # Application API
 class Api < Grape::API
+  content_type :json, 'application/json'
+  content_type :txt, 'text/plain'
+
   format :json
   FULL_ERRORS = {
     required: 'cannot be blank',
@@ -71,12 +74,16 @@ class Api < Grape::API
     end
     post do
       cart.add_product!(product, params[:quantity])
+      content_type 'text/plain'
+      body ''
     end
 
     # Remove Product from Cart
     route_param :product_id, type: { value: Integer, message: 'invalid' } do
       delete do
         cart.remove_product!(product)
+        content_type 'text/plain'
+        body ''
       end
     end
   end
