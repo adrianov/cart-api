@@ -6,4 +6,10 @@ describe Product, type: :model do
       expect(Product.all.count).to eq(2)
     end
   end
+
+  describe '.find' do
+    it 'finds element by id' do
+      expect(Product.find(2).id).to eq(2)
+    end
+  end
 end
