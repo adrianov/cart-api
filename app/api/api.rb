@@ -87,4 +87,13 @@ class Api < Grape::API
       end
     end
   end
+
+  route :any, '*path' do
+    error!(
+      error: {
+        type: 'invalid_request_error',
+        message: "Unable to resolve the request \"#{request.path}\"."
+      }
+    )
+  end
 end
