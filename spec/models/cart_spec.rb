@@ -26,4 +26,13 @@ describe Cart, type: :model do
       expect(cart.total_sum).to eq(350)
     end
   end
+
+  describe '.products_count' do
+    it 'counts Products' do
+      cart = Cart.new
+      cart.add_product!(Product.find(1), 1)
+      cart.add_product!(Product.find(2), 2)
+      expect(cart.products_count).to eq(3)
+    end
+  end
 end
