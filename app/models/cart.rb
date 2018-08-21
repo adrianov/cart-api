@@ -10,4 +10,8 @@ class Cart
     products[product.id] ||= 0
     products[product.id] += quantity
   end
+
+  def remove_product!(product, quantity)
+    products[product.id] -= quantity
+  end
 end
