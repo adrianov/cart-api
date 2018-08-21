@@ -9,6 +9,7 @@
 
 git diff --name-only --diff-filter=ACMR master | grep '\.rb$' | xargs -r rubocop -a --force-exclusion
 git diff --name-only --diff-filter=ACMR master | grep '\.rake$' | xargs -r rubocop -a --force-exclusion
+git diff --name-only --diff-filter=ACMR master | grep 'Gemfile$' | xargs -r rubocop -a --force-exclusion
 git diff --name-only --diff-filter=ACMR master | grep '\.coffee$' | xargs -r coffeelint -f coffeelint.json
 git diff --name-only --diff-filter=ACMR master | grep '\.js$' | xargs -r jshint -c javascript.json
 git diff --name-only --diff-filter=ACMR master | grep '\.scss$' | xargs -r csscomb -c .csscomb.json
