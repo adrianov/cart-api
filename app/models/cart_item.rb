@@ -22,7 +22,7 @@ class CartItem
     @quantity = value
   end
 
-  def as_json(_options = {})
+  def to_hash
     {
       id: product.id,
       quantity: quantity,

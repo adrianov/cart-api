@@ -37,11 +37,11 @@ class Cart
     products.values.map(&:quantity).sum
   end
 
-  def as_json(_options = {})
+  def to_hash
     {
       total_sum: total_sum,
       products_count: products_count,
-      products: products.values.map(&:as_json)
+      products: products.values.map(&:to_hash)
     }
   end
 end
