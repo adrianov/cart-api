@@ -1,51 +1,49 @@
 require 'rails_helper'
 
 describe Cart, type: :model do
-  before(:each) do
-    @cart = Cart.new
-  end
+  let(:cart) { Cart.new }
 
   describe '.add_product!' do
     it 'adds product to Cart' do
-      @cart.add_product!(Product.find(1), 1)
-      expect(@cart.products[1].quantity).to eq(1)
+      cart.add_product!(Product.find(1), 1)
+      expect(cart.products[1].quantity).to eq(1)
     end
   end
 
   describe '.remove_product!' do
     it 'removes product from Cart' do
-      @cart.add_product!(Product.find(1), 1)
-      @cart.remove_product!(Product.find(1), 1)
-      expect(@cart.products.key?(1)).to be_falsey
+      cart.add_product!(Product.find(1), 1)
+      cart.remove_product!(Product.find(1), 1)
+      expect(cart.products.key?(1)).to be_falsey
     end
     it 'removes 1 product by default' do
-      @cart.add_product!(Product.find(1), 2)
-      @cart.remove_product!(Product.find(1))
-      expect(@cart.products[1].quantity).to eq(1)
+      cart.add_product!(Product.find(1), 2)
+      cart.remove_product!(Product.find(1))
+      expect(cart.products[1].quantity).to eq(1)
     end
   end
 
   describe '.total_sum' do
     it 'counts total sum for added Products' do
-      @cart.add_product!(Product.find(1), 1)
-      @cart.add_product!(Product.find(2), 2)
-      expect(@cart.total_sum).to eq(350)
+      cart.add_product!(Product.find(1), 1)
+      cart.add_product!(Product.find(2), 2)
+      expect(cart.total_sum).to eq(350)
     end
   end
 
   describe '.products_count' do
     it 'counts Products' do
-      @cart.add_product!(Product.find(1), 1)
-      @cart.add_product!(Product.find(2), 2)
-      expect(@cart.products_count).to eq(3)
+      cart.add_product!(Product.find(1), 1)
+      cart.add_product!(Product.find(2), 2)
+      expect(cart.products_count).to eq(3)
     end
   end
 
   describe '.to_json' do
     it 'returns proper JSON structure' do
-      @cart.add_product!(Product.find(1), 1)
-      @cart.add_product!(Product.find(2), 2)
-      expect(@cart.to_json).to eq(
+      cart.add_product!(Product.find(1), 1)
+      cart.add_product!(Product.find(2), 2)
+      expect(cart.to_json).to eq(
         {
           total_sum: 350,
           products_count: 3,
